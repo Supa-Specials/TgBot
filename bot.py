@@ -8,10 +8,15 @@ def Greeting(message):
     bot.send_message(message.chat.id, "Hi")
 
 @bot.message_handler(commands=['translate'])
-def Translating(message):
+def translate_text(message):
+    text = message.text.replace('/translate', '').strip()
+    if not text:
+        bot.send_message(message.chat.id, "Пожалуйста, добавь текст после команды /translate.")
+        return
+
     try:
-        translated =  GoogleTranslator(source='auto', target='en').translate('original')
-        bot.send_message(message.chat.id, f"Перевод:\n{translated}")
+        translated = GoogleTranslator(source='auto', target='en').translate(text)
+        bot.send_message(message.chat.id, f"Перевод: {translated}")
     except Exception as e:
         bot.send_message(message.chat.id, f"Ошибка перевода: {e}")
 
