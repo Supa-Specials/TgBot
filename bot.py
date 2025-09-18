@@ -1,9 +1,18 @@
 import telebot as tl
+from deep_translator import GoogleTranslator
 
 bot = tl.TeleBot('8467658943:AAHfyHgsfXBH0xY77HQxNiG_uOldskIOHbQ')
 
 @bot.message_handler(commands=['start'])
-def main(message):
+def Greeting(message):
     bot.send_message(message.chat.id, "Hi")
+
+@bot.message_handler(commands=['translate'])
+def Translating(message):
+    try:
+        translated =  GoogleTranslator(source='auto', target='en').translate('original')
+        bot.send_message(message.chat.id, f"Перевод:\n{translated}")
+    except Exception as e:
+        bot.send_message(message.chat.id, f"Ошибка перевода: {e}")
 
 bot.polling(non_stop=True)
